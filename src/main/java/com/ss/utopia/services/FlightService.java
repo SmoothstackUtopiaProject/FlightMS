@@ -97,30 +97,20 @@ public class FlightService {
 			} catch(Exception err){/*Do nothing*/}
 		}
 		
-		// Origin
+		// Origin & Destination
 		String origin = "origin";
-		if(filterMap.keySet().contains(origin)) {
-			try {
-				List<Integer> routeIdList = routeService.findByOrigin(filterMap.get(origin))
-						.stream().map(i -> i.getRouteId())
-						.collect(Collectors.toList());
-				filteredFlights = filteredFlights.stream()
-				.filter(i -> routeIdList.contains(i.getFlightRouteId()))
-				.collect(Collectors.toList());
-			} catch(Exception err){/*Do nothing*/}
-		}
-		
-		// Destination
 		String destination = "destination";
-		if(filterMap.keySet().contains(destination)) {
-			try {
-				List<Integer> routeIdList = routeService.findByDestination(filterMap.get(destination))
-						.stream().map(i -> i.getRouteId())
-						.collect(Collectors.toList());
-				filteredFlights = filteredFlights.stream()
-				.filter(i -> routeIdList.contains(i.getFlightRouteId()))
-				.collect(Collectors.toList());
-			} catch(Exception err){/*Do nothing*/}
+		if(filterMap.keySet().contains(origin) || filterMap.keySet().contains(destination)) {
+			
+			HashMap<String, String> routeIdFilterMap = new HashMap<String, String>();
+			if(filterMap.keySet().contains(origin)) routeIdFilterMap.put("routeOriginIataId", filterMap.get(origin));
+			if(filterMap.keySet().contains(destination)) routeIdFilterMap.put("routeDestinationIataId", filterMap.get(destination));
+			List<Integer> routeIdList = routeService.findBySearchAndFilter(routeIdFilterMap).stream()
+			.map(i -> i.getRouteId()).collect(Collectors.toList());
+
+			filteredFlights = filteredFlights.stream()
+			.filter(i -> routeIdList.contains(i.getFlightId()))
+			.collect(Collectors.toList());
 		}
 
 		// Origin Date
