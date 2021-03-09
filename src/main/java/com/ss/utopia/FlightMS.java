@@ -1,13 +1,13 @@
-package com.utopia.flight;
+package com.ss.utopia;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FlightMsApplication {
+public class FlightMS {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FlightMsApplication.class, args);
+		SpringApplication.run(FlightMS.class, args);
 	}
 
 }

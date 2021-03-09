@@ -1,4 +1,4 @@
-package com.utopia.flight.exception;
+package com.ss.utopia.exceptions;
 
 public class FlightNotFoundException extends Exception {
 
