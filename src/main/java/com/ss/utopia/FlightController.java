@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
 import com.ss.utopia.models.Flight;
+import com.ss.utopia.models.FlightWithReferenceData;
 import com.ss.utopia.models.HttpError;
 import com.ss.utopia.services.FlightService;
 
@@ -39,7 +40,6 @@ public class FlightController {
 		return !allFlights.isEmpty() ? new ResponseEntity<>(allFlights, HttpStatus.OK)
 				: new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 	}
-	
 
 	@GetMapping("{path}")
 	public ResponseEntity<Object> findById(@PathVariable String path)
@@ -64,13 +64,14 @@ public class FlightController {
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody HashMap<String, String> flightMap) throws ConnectException, SQLException{
 		
+		System.out.println("=======================================" + flightMap);
 		try {
-			Integer routeId = Integer.parseInt(flightMap.get("routeId"));
-			Integer airplaneId = Integer.parseInt(flightMap.get("airplaneId"));
-			String dateTime = flightMap.get("dateTime");
-			Integer seatingId = Integer.parseInt(flightMap.get("seatingId"));
-			Integer duration = Integer.parseInt(flightMap.get("duration"));
-			String status = flightMap.get("status");
+			Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
+			Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
+			String dateTime = flightMap.get("flightDepartureTime");
+			Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
+			Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
+			String status = flightMap.get("flightStatus");
 			
 			return new ResponseEntity<>(flightService.insert(routeId, airplaneId, dateTime, seatingId, duration, status), HttpStatus.CREATED);
 		} catch (AirplaneAlreadyInUseException err) {
@@ -82,13 +83,13 @@ public class FlightController {
 	public ResponseEntity<Object> update(@RequestBody HashMap<String, String> flightMap) throws ConnectException, SQLException{
 		
 		try {
-			Integer id = Integer.parseInt(flightMap.get("id"));
-			Integer routeId = Integer.parseInt(flightMap.get("routeId"));
-			Integer airplaneId = Integer.parseInt(flightMap.get("airplaneId"));
-			String dateTime = flightMap.get("dateTime");
-			Integer seatingId = Integer.parseInt(flightMap.get("seatingId"));
-			Integer duration = Integer.parseInt(flightMap.get("duration"));
-			String status = flightMap.get("status");
+			Integer id = Integer.parseInt(flightMap.get("flightId"));
+			Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
+			Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
+			String dateTime = flightMap.get("flightDepartureTime");
+			Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
+			Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
+			String status = flightMap.get("flightStatus");
 			
 			return new ResponseEntity<>(flightService.update(id, routeId, airplaneId, dateTime, seatingId, duration, status), HttpStatus.CREATED);
 		} catch (AirplaneAlreadyInUseException err) {
@@ -110,9 +111,9 @@ public class FlightController {
 	 */
 	
 	@DeleteMapping("{flightId}")
-	public ResponseEntity<Object> deleteById(@PathVariable Integer flightId) {
+	public ResponseEntity<Object> deleteById(@PathVariable String flightId) {
 		try {
-			flightService.deleteById(flightId);
+			flightService.deleteById(Integer.parseInt(flightId));
 			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 		} catch(FlightNotFoundException err) {
 			return new ResponseEntity<>(new HttpError(err.getMessage(), 404), HttpStatus.NOT_FOUND);
@@ -123,8 +124,7 @@ public class FlightController {
 	
 	@PostMapping("/search")
 	public ResponseEntity<Object> findBySearchAndFilter(@RequestBody HashMap<String, String> filterMap) {
-
-		List<Flight> flights = flightService.findBySearchAndFilter(filterMap);
+		List<FlightWithReferenceData> flights = flightService.findBySearchAndFilter(filterMap);
 		return !flights.isEmpty() 
 			? new ResponseEntity<>(flights, HttpStatus.OK)
 			: new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

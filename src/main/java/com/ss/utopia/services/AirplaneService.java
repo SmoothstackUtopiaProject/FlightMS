@@ -11,19 +11,22 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ss.utopia.exceptions.AirportAlreadyExistsException;
-import com.ss.utopia.exceptions.AirportNotFoundException;
-import com.ss.utopia.models.Airport;
-import com.ss.utopia.repositories.AirportRepository;
+import com.ss.utopia.models.Airplane;
+import com.ss.utopia.models.AirplaneType;
+import com.ss.utopia.repositories.AirplaneRepository;
 
 @Service
-public class AirportService {
-
+public class AirplaneService {
+	
 	@Autowired
-	AirportRepository airportRepository;
+	private AirplaneRepository airplaneRepository;
 
-	public List<Airport> findAll() {
-		return airportRepository.findAll();
+	public List<Airplane> findAll() {
+		return airplaneRepository.findAll();
 	}
 
+	public List<AirplaneType> findAllAirplaneTypes() {
+		return airplaneRepository.findAllAirplaneTypes();
+	}
+	
 }
