@@ -64,7 +64,7 @@ public class FlightController {
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody HashMap<String, String> flightMap) throws ConnectException, SQLException{
 		
-		System.out.println("=======================================" + flightMap);
+		//System.out.println("=======================================" + flightMap);
 		try {
 			Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
 			Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
