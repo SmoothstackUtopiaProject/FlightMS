@@ -60,7 +60,8 @@ public class Flight {
 		this.flightStatus = flightStatus;
 	}
 
-	public Flight(Integer flightRouteId, Integer flightAirplaneId, String flightDepartureTime, Integer flightSeatingId, Integer flightDuration,String flightStatus) {
+	public Flight(Integer flightRouteId, Integer flightAirplaneId, String flightDepartureTime, 
+	Integer flightSeatingId, Integer flightDuration,String flightStatus) {
 		this.flightRouteId = flightRouteId;
 		this.flightAirplaneId = flightAirplaneId;
 		this.flightDepartureTime = flightDepartureTime;
