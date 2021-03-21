@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.ss.utopia.models.FlightWithReferenceData;
+import com.ss.utopia.models.Flight;
 import com.ss.utopia.timeformatting.FlightTimeFormatter;
 
 public final class FlightFilters {
@@ -34,7 +34,7 @@ public final class FlightFilters {
   }
 
   // Filter Mapping
-  public static List<FlightWithReferenceData> apply(Collection<FlightWithReferenceData> flights, 
+  public static List<Flight> apply(Collection<Flight> flights, 
   Map<String, String> filterMap) {
     
     // ID
@@ -147,72 +147,72 @@ public final class FlightFilters {
   // ==========================================================================================
 
   // ID
-  public static List<FlightWithReferenceData> filterByFlightId 
-  (Collection<FlightWithReferenceData> flights, Integer flightId) {
+  public static List<Flight> filterByFlightId 
+  (Collection<Flight> flights, Integer flightId) {
     return flights.parallelStream()
       .filter(i -> i.getFlightId().equals(flightId))
       .collect(Collectors.toList());
   }
 
   // Route Destination IATA ID
-  public static List<FlightWithReferenceData> filterByFlightRouteDestinationIataId 
-  (Collection<FlightWithReferenceData> flights, String flightRouteOriginIataId) {
+  public static List<Flight> filterByFlightRouteDestinationIataId 
+  (Collection<Flight> flights, String flightRouteOriginIataId) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRouteDestinationIataId().equals(flightRouteOriginIataId))
+      .filter(i -> i.getFlightRouteId().getRouteDestinationIataId().getAirportIataId().equals(flightRouteOriginIataId))
       .collect(Collectors.toList());
   }
 
   // Route Origin IATA ID
-  public static List<FlightWithReferenceData> filterByFlightRouteOriginIataId 
-  (Collection<FlightWithReferenceData> flights, String flightRouteDestinationIataId) {
+  public static List<Flight> filterByFlightRouteOriginIataId 
+  (Collection<Flight> flights, String flightRouteDestinationIataId) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRouteOriginIataId().equals(flightRouteDestinationIataId))
+      .filter(i -> i.getFlightRouteId().getRouteOriginIataId().getAirportIataId().equals(flightRouteDestinationIataId))
       .collect(Collectors.toList());
   }
 
   // Route Destination City Name
-  public static List<FlightWithReferenceData> filterByFlightRouteDestinationCityName 
-  (Collection<FlightWithReferenceData> flights, String flightRouteDestinationCityName) {
+  public static List<Flight> filterByFlightRouteDestinationCityName 
+  (Collection<Flight> flights, String flightRouteDestinationCityName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRouteDestinationCityName().equals(flightRouteDestinationCityName))
+      .filter(i -> i.getFlightRouteId().getRouteDestinationIataId().getAirportCityName().equals(flightRouteDestinationCityName))
       .collect(Collectors.toList());
   }
 
   // Route Origin City Name
-  public static List<FlightWithReferenceData> filterByFlightRouteOriginCityName 
-  (Collection<FlightWithReferenceData> flights, String flightRouteOriginCityName) {
+  public static List<Flight> filterByFlightRouteOriginCityName 
+  (Collection<Flight> flights, String flightRouteOriginCityName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRouteOriginCityName().equals(flightRouteOriginCityName))
+      .filter(i -> i.getFlightRouteId().getRouteOriginIataId().getAirportCityName().equals(flightRouteOriginCityName))
       .collect(Collectors.toList());
   }
 
   // Airplane ID
-  public static List<FlightWithReferenceData> filterByFlightAirplaneId 
-  (Collection<FlightWithReferenceData> flights, Integer flightAirplaneId) {
+  public static List<Flight> filterByFlightAirplaneId 
+  (Collection<Flight> flights, Integer flightAirplaneId) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightAirplaneId().equals(flightAirplaneId))
+      .filter(i -> i.getFlightAirplaneId().getAirplaneId().equals(flightAirplaneId))
       .collect(Collectors.toList());
   }
 
   // Airplane Type Name
-  public static List<FlightWithReferenceData> filterByFlightAirplaneTypeName 
-  (Collection<FlightWithReferenceData> flights, String flightAirplaneTypeName) {
+  public static List<Flight> filterByFlightAirplaneTypeName 
+  (Collection<Flight> flights, String flightAirplaneTypeName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightAirplaneTypeName().equals(flightAirplaneTypeName))
+      .filter(i -> i.getFlightAirplaneId().getAirplaneTypeId().getAirplaneTypeName().equals(flightAirplaneTypeName))
       .collect(Collectors.toList());
   }
 
   // Departure Time - Exact Match
-  public static List<FlightWithReferenceData> filterByFlightDepartureTime 
-  (Collection<FlightWithReferenceData> flights, String flightDepartureTime) {
+  public static List<Flight> filterByFlightDepartureTime 
+  (Collection<Flight> flights, String flightDepartureTime) {
     return flights.parallelStream()
       .filter(i -> i.getFlightDepartureTime().equals(flightDepartureTime))
       .collect(Collectors.toList());
   }
 
   // Departure Time - After
-  public static List<FlightWithReferenceData> filterByFlightDepartureTimeAfter
-  (Collection<FlightWithReferenceData> flights, String flightDepartureTime) {
+  public static List<Flight> filterByFlightDepartureTimeAfter
+  (Collection<Flight> flights, String flightDepartureTime) {
     return flights.parallelStream()
       .filter(i -> 
         LocalDateTime.parse(i.getFlightDepartureTime(), FlightTimeFormatter.getInstance())
@@ -222,8 +222,8 @@ public final class FlightFilters {
   }
 
   // Departure Time - Before
-  public static List<FlightWithReferenceData> filterByFlightDepartureTimeBefore
-  (Collection<FlightWithReferenceData> flights, String flightDepartureTime) {
+  public static List<Flight> filterByFlightDepartureTimeBefore
+  (Collection<Flight> flights, String flightDepartureTime) {
     return flights.parallelStream()
       .filter(i -> 
         LocalDateTime.parse(i.getFlightDepartureTime(), FlightTimeFormatter.getInstance())
@@ -233,62 +233,62 @@ public final class FlightFilters {
   }
 
   // Seating ID
-  public static List<FlightWithReferenceData> filterByFlightSeatingId 
-  (Collection<FlightWithReferenceData> flights, Integer flightSeatingId) {
+  public static List<Flight> filterByFlightSeatingId 
+  (Collection<Flight> flights, Integer flightSeatingId) {
     return flights.parallelStream()
       .filter(i -> i.getFlightSeatingId().equals(flightSeatingId))
       .collect(Collectors.toList());
   }
 
   // Duration - Exact Match
-  public static List<FlightWithReferenceData> filterByFlightDuration 
-  (Collection<FlightWithReferenceData> flights, Integer flightDuration) {
+  public static List<Flight> filterByFlightDuration 
+  (Collection<Flight> flights, Integer flightDuration) {
     return flights.parallelStream()
       .filter(i -> i.getFlightDuration().equals(flightDuration))
       .collect(Collectors.toList());
   }
 
   // Duration - Greater Than
-  public static List<FlightWithReferenceData> filterByFlightDurationGreaterThan
-  (Collection<FlightWithReferenceData> flights, Integer flightDuration) {
+  public static List<Flight> filterByFlightDurationGreaterThan
+  (Collection<Flight> flights, Integer flightDuration) {
     return flights.parallelStream()
       .filter(i -> i.getFlightDuration() > flightDuration)
       .collect(Collectors.toList());
   }
 
   // Duration - Less Than
-  public static List<FlightWithReferenceData> filterByFlightDurationLessThan
-  (Collection<FlightWithReferenceData> flights, Integer flightDuration) {
+  public static List<Flight> filterByFlightDurationLessThan
+  (Collection<Flight> flights, Integer flightDuration) {
     return flights.parallelStream()
       .filter(i -> i.getFlightDuration() < flightDuration)
       .collect(Collectors.toList());
   }
 
   // Status
-  public static List<FlightWithReferenceData> filterByFlightStatus 
-  (Collection<FlightWithReferenceData> flights, String flightStatus) {
+  public static List<Flight> filterByFlightStatus 
+  (Collection<Flight> flights, String flightStatus) {
     return flights.parallelStream()
       .filter(i -> i.getFlightStatus().equals(flightStatus))
       .collect(Collectors.toList());
   }
 
   // SearchTerms
-  public static List<FlightWithReferenceData> filterBySearchTerms
-  (Collection<FlightWithReferenceData> flights, String searchTerms) {
+  public static List<Flight> filterBySearchTerms
+  (Collection<Flight> flights, String searchTerms) {
     String formattedSearch = searchTerms.toLowerCase(Locale.getDefault()).replace(", ", ",");
     String[] splitTerms = formattedSearch.split(",");
 
     for(String searchTerm : splitTerms) {
       flights = flights.parallelStream()
-      .filter((FlightWithReferenceData i) ->
+      .filter((Flight i) ->
         i.getFlightId().toString().contains(searchTerm) ||
         i.getFlightRouteId().toString().contains(searchTerm) ||
-        i.getFlightRouteOriginIataId().contains(searchTerm) ||
-        i.getFlightRouteDestinationIataId().contains(searchTerm) ||
-        i.getFlightRouteOriginCityName().contains(searchTerm) ||
-        i.getFlightRouteDestinationCityName().contains(searchTerm) ||
+        i.getFlightRouteId().getRouteOriginIataId().getAirportIataId().contains(searchTerm) ||
+        i.getFlightRouteId().getRouteDestinationIataId().getAirportIataId().contains(searchTerm) ||
+        i.getFlightRouteId().getRouteOriginIataId().getAirportCityName().contains(searchTerm) ||
+        i.getFlightRouteId().getRouteDestinationIataId().getAirportCityName().contains(searchTerm) ||
         i.getFlightAirplaneId().toString().contains(searchTerm) ||
-        i.getFlightAirplaneTypeName().contains(searchTerm) ||
+        i.getFlightAirplaneId().getAirplaneTypeId().getAirplaneTypeName().contains(searchTerm) ||
         i.getFlightDepartureTime().contains(searchTerm) ||
         i.getFlightSeatingId().toString().contains(searchTerm) ||
         i.getFlightDuration().toString().contains(searchTerm) ||

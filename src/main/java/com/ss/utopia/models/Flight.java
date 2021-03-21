@@ -1,6 +1,8 @@
 package com.ss.utopia.models;
 
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,12 +20,14 @@ public class Flight {
 	private Integer flightId;
 
 	@NotNull(message = "Route ID should not be empty")
-	@Column(name = "route_id")
-	private Integer flightRouteId;
+	@ManyToOne
+	@JoinColumn(name = "route_id")
+	private Route flightRouteId;
 
 	@NotNull(message = "Airplane ID should not be empty")
-	@Column(name = "airplane_id")
-	private Integer flightAirplaneId;
+	@ManyToOne
+	@JoinColumn(name = "airplane_id")
+	private Airplane flightAirplaneId;
 
 	@NotNull(message = "Departure time should not be empty")
 	@Column(name = "departure_time")
@@ -44,8 +48,8 @@ public class Flight {
 	
 	public Flight() {}
 	public Flight(Integer flightId, 
-		@NotNull(message = "Route ID should not be empty") Integer flightRouteId,
-		@NotNull(message = "Airplane ID should not be empty") Integer flightAirplaneId,
+		@NotNull(message = "Route ID should not be empty") Route flightRouteId,
+		@NotNull(message = "Airplane ID should not be empty") Airplane flightAirplaneId,
 		@NotNull(message = "Departure time should not be empty") String flightDepartureTime,
 		@NotNull(message = "Seating ID should not be empty") Integer flightSeatingId,
 		@NotNull(message = "Duration should not be empty") Integer flightDuration,
@@ -60,7 +64,7 @@ public class Flight {
 		this.flightStatus = flightStatus;
 	}
 
-	public Flight(Integer flightRouteId, Integer flightAirplaneId, String flightDepartureTime, 
+	public Flight(Route flightRouteId, Airplane flightAirplaneId, String flightDepartureTime, 
 	Integer flightSeatingId, Integer flightDuration,String flightStatus) {
 		this.flightRouteId = flightRouteId;
 		this.flightAirplaneId = flightAirplaneId;
@@ -71,8 +75,8 @@ public class Flight {
 	}
 
 	public Flight(
-		@NotNull(message = "Route ID should not be empty") Integer flightRouteId,
-		@NotNull(message = "Airplane ID should not be empty") Integer flightAirplaneId,
+		@NotNull(message = "Route ID should not be empty") Route flightRouteId,
+		@NotNull(message = "Airplane ID should not be empty") Airplane flightAirplaneId,
 		@NotNull(message = "Departure time should not be empty") String flightDepartureTime) {
 		this.flightRouteId = flightRouteId;
 		this.flightAirplaneId = flightAirplaneId;
@@ -119,19 +123,19 @@ public class Flight {
 		this.flightId = flightId;
 	}
 
-	public Integer getFlightRouteId() {
+	public Route getFlightRouteId() {
 		return flightRouteId;
 	}
 
-	public void setFlightRouteId(Integer flightRouteId) {
+	public void setFlightRouteId(Route flightRouteId) {
 		this.flightRouteId = flightRouteId;
 	}
 
-	public Integer getFlightAirplaneId() {
+	public Airplane getFlightAirplaneId() {
 		return flightAirplaneId;
 	}
 
-	public void setFlightAirplaneId(Integer flightAirplaneId) {
+	public void setFlightAirplaneId(Airplane flightAirplaneId) {
 		this.flightAirplaneId = flightAirplaneId;
 	}
 }

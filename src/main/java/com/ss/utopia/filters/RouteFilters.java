@@ -75,8 +75,8 @@ public final class RouteFilters {
       routes = routes.parallelStream()
       .filter((Route i) ->
         i.getRouteId().toString().contains(searchTerm) ||
-        i.getRouteOriginIataId().contains(searchTerm) ||
-        i.getRouteDestinationIataId().contains(searchTerm)
+        i.getRouteOriginIataId().getAirportIataId().contains(searchTerm) ||
+        i.getRouteDestinationIataId().getAirportIataId().contains(searchTerm)
       ).collect(Collectors.toList());
     }
 		return routes;
