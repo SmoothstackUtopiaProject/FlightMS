@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -27,7 +28,7 @@ public class Flight {
 	@NotNull(message = "Airplane ID should not be empty")
 	@ManyToOne
 	@JoinColumn(name = "airplane_id")
-	private Airplane flightAirplaneId;
+	private @Valid Airplane flightAirplaneId;
 
 	@NotNull(message = "Departure time should not be empty")
 	@Column(name = "departure_time")
@@ -135,7 +136,7 @@ public class Flight {
 		return flightAirplaneId;
 	}
 
-	public void setFlightAirplaneId(Airplane flightAirplaneId) {
+	public void setFlightAirplaneId(@Valid Airplane flightAirplaneId) {
 		this.flightAirplaneId = flightAirplaneId;
 	}
 }
