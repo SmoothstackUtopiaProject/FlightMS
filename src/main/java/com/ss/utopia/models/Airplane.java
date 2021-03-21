@@ -21,15 +21,15 @@ public class Airplane {
 	@NotNull(message = "Type ID should not be empty")
 	@ManyToOne
 	@JoinColumn(name = "type_id", nullable = false)
-	private AirplaneType airplaneTypeId;
+	private AirplaneType airplaneType;
 
 	public Airplane() {}
-	public Airplane(AirplaneType airplaneTypeId) {
-		this.airplaneTypeId = airplaneTypeId;
+	public Airplane(AirplaneType airplaneType) {
+		this.airplaneType = airplaneType;
 	}
-	public Airplane(Integer airplaneId, AirplaneType airplaneTypeId) {
+	public Airplane(Integer airplaneId, AirplaneType airplaneType) {
 		this.airplaneId = airplaneId;
-		this.airplaneTypeId = airplaneTypeId;
+		this.airplaneType = airplaneType;
 	}
 	public Airplane(Integer airplaneId) {
 		this.airplaneId = airplaneId;
@@ -43,12 +43,12 @@ public class Airplane {
 		this.airplaneId = airplaneId;
 	}
 
-	public AirplaneType getAirplaneTypeId() {
-		return airplaneTypeId;
+	public AirplaneType getAirplaneType() {
+		return airplaneType;
 	}
 
-	public void setAirplaneTypeId(AirplaneType airplaneTypeId) {
-		this.airplaneTypeId = airplaneTypeId;
+	public void setAirplaneType(AirplaneType airplaneType) {
+		this.airplaneType = airplaneType;
 	}
 	
 }

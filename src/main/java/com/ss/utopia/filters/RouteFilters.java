@@ -53,16 +53,16 @@ public final class RouteFilters {
   }
 
   public static List<Route> filterByRouteDestinationIataId 
-  (Collection<Route> routes, String routeOriginIataId) {
+  (Collection<Route> routes, String routeDestinationIataId) {
     return routes.parallelStream()
-      .filter(i -> i.getRouteDestinationIataId().equals(routeOriginIataId))
+      .filter(i -> i.getRouteDestination().getAirportIataId().equals(routeDestinationIataId))
       .collect(Collectors.toList());
   }
 
   public static List<Route> filterByRouteOriginIataId 
-  (Collection<Route> routes, String routeDestinationIataId) {
+  (Collection<Route> routes, String routeOriginIataId) {
     return routes.parallelStream()
-      .filter(i -> i.getRouteOriginIataId().equals(routeDestinationIataId))
+      .filter(i -> i.getRouteOrigin().getAirportIataId().equals(routeOriginIataId))
       .collect(Collectors.toList());
   }
 
@@ -75,8 +75,8 @@ public final class RouteFilters {
       routes = routes.parallelStream()
       .filter((Route i) ->
         i.getRouteId().toString().contains(searchTerm) ||
-        i.getRouteOriginIataId().getAirportIataId().contains(searchTerm) ||
-        i.getRouteDestinationIataId().getAirportIataId().contains(searchTerm)
+        i.getRouteOrigin().getAirportIataId().contains(searchTerm) ||
+        i.getRouteDestination().getAirportIataId().contains(searchTerm)
       ).collect(Collectors.toList());
     }
 		return routes;
