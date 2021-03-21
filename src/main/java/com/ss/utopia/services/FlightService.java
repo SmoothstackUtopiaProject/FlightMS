@@ -118,8 +118,6 @@ public class FlightService {
 	// Insert
 	public Flight insert(Route routeId ,Airplane airplaneId , String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException {
-
-		System.out.println(dateTime);
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId.getAirplaneId())
 			.stream().filter(i -> 
