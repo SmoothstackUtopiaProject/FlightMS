@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
 import com.ss.utopia.models.Flight;
-import com.ss.utopia.models.FlightWithReferenceData;
+import com.ss.utopia.models.Route;
+import com.ss.utopia.models.Airplane;
 import com.ss.utopia.models.ErrorMessage;
 import com.ss.utopia.services.FlightService;
 
@@ -57,8 +58,8 @@ public class FlightController {
 	
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) throws AirplaneAlreadyInUseException {
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
+		Route routeId = new Route(Integer.parseInt(flightMap.get("flightRouteId")));
+		Airplane airplaneId = new Airplane(Integer.parseInt(flightMap.get("flightAirplaneId")));
 		String dateTime = flightMap.get("flightDepartureTime");
 		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
 		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
@@ -73,7 +74,7 @@ public class FlightController {
 
 	@PostMapping("/search")
 	public ResponseEntity<Object> findBySearchAndFilter(@RequestBody Map<String, String> filterMap) {
-		List<FlightWithReferenceData> flights = flightService.findBySearchAndFilter(filterMap);
+		List<Flight> flights = flightService.findBySearchAndFilter(filterMap);
 		return !flights.isEmpty() 
 			? new ResponseEntity<>(flights, HttpStatus.OK)
 			: new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -83,8 +84,8 @@ public class FlightController {
 	public ResponseEntity<Object> update(@RequestBody Map<String, String> flightMap) 
 	throws AirplaneAlreadyInUseException, FlightNotFoundException {
 		Integer id = Integer.parseInt(flightMap.get("flightId"));
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
+		Route routeId = new Route(Integer.parseInt(flightMap.get("flightRouteId")));
+		Airplane airplaneId = new Airplane(Integer.parseInt(flightMap.get("flightAirplaneId")));
 		String dateTime = flightMap.get("flightDepartureTime");
 		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
 		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));

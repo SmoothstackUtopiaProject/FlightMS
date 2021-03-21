@@ -1,6 +1,8 @@
 package com.ss.utopia.models;
 
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,24 +18,27 @@ public class Route {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer routeId;
 	
-	@Column(name = "origin_Id")
-	private String routeOriginIataId;
+	@ManyToOne
+	@JoinColumn(name = "origin_Id")
+	private Airport routeOriginIataId;
 
-	@Column(name = "destination_Id")
-	private String routeDestinationIataId;
+	@ManyToOne
+	@JoinColumn(name = "destination_Id")
+	private Airport routeDestinationIataId;
 
 	public Route() {}
-	public Route(Integer routeId, String routeOriginIataId, String routeDestinationIataId) {
+	public Route(Integer routeId, Airport routeOriginIataId, Airport routeDestinationIataId) {
 		this.routeId = routeId;
 		this.routeOriginIataId = routeOriginIataId;
 		this.routeDestinationIataId = routeDestinationIataId;
 	}
-	
-	public Route(String routeOriginIataId, String routeDestinationIataId) {
+	public Route(Airport routeOriginIataId, Airport routeDestinationIataId) {
 		this.routeOriginIataId = routeOriginIataId;
 		this.routeDestinationIataId = routeDestinationIataId;
 	}
-	
+	public Route(Integer routeId) {
+		this.routeId = routeId;
+	}
 	
 	public Integer getRouteId() {
 		return routeId;
@@ -43,19 +48,20 @@ public class Route {
 		this.routeId = routeId;
 	}
 
-	public String getRouteOriginIataId() {
+	public Airport getRouteOriginIataId() {
 		return routeOriginIataId;
 	}
 
-	public void setRouteOriginIataId(String routeOriginIataId) {
+	public void setRouteOriginIataId(Airport routeOriginIataId) {
 		this.routeOriginIataId = routeOriginIataId;
 	}
 
-	public String getRouteDestinationIataId() {
+	public Airport getRouteDestinationIataId() {
 		return routeDestinationIataId;
 	}
 
-	public void setRouteDestinationIataId(String routeDestinationIataId) {
+	public void setRouteDestinationIataId(Airport routeDestinationIataId) {
 		this.routeDestinationIataId = routeDestinationIataId;
 	}
+	
 }
