@@ -158,7 +158,7 @@ public final class FlightFilters {
   public static List<Flight> filterByFlightRouteDestinationIataId 
   (Collection<Flight> flights, String flightRouteOriginIataId) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRoute().getRouteDestinationIataId().getAirportIataId().equals(flightRouteOriginIataId))
+      .filter(i -> i.getFlightRoute().getRouteDestination().getAirportIataId().equals(flightRouteOriginIataId))
       .collect(Collectors.toList());
   }
 
@@ -166,7 +166,7 @@ public final class FlightFilters {
   public static List<Flight> filterByFlightRouteOriginIataId 
   (Collection<Flight> flights, String flightRouteDestinationIataId) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRoute().getRouteOriginIataId().getAirportIataId().equals(flightRouteDestinationIataId))
+      .filter(i -> i.getFlightRoute().getRouteOrigin().getAirportIataId().equals(flightRouteDestinationIataId))
       .collect(Collectors.toList());
   }
 
@@ -174,7 +174,7 @@ public final class FlightFilters {
   public static List<Flight> filterByFlightRouteDestinationCityName 
   (Collection<Flight> flights, String flightRouteDestinationCityName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRoute().getRouteDestinationIataId().getAirportCityName().equals(flightRouteDestinationCityName))
+      .filter(i -> i.getFlightRoute().getRouteDestination().getAirportCityName().equals(flightRouteDestinationCityName))
       .collect(Collectors.toList());
   }
 
@@ -182,7 +182,7 @@ public final class FlightFilters {
   public static List<Flight> filterByFlightRouteOriginCityName 
   (Collection<Flight> flights, String flightRouteOriginCityName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightRoute().getRouteOriginIataId().getAirportCityName().equals(flightRouteOriginCityName))
+      .filter(i -> i.getFlightRoute().getRouteOrigin().getAirportCityName().equals(flightRouteOriginCityName))
       .collect(Collectors.toList());
   }
 
@@ -198,7 +198,7 @@ public final class FlightFilters {
   public static List<Flight> filterByFlightAirplaneTypeName 
   (Collection<Flight> flights, String flightAirplaneTypeName) {
     return flights.parallelStream()
-      .filter(i -> i.getFlightAirplane().getAirplaneTypeId().getAirplaneTypeName().equals(flightAirplaneTypeName))
+      .filter(i -> i.getFlightAirplane().getAirplaneType().getAirplaneTypeName().equals(flightAirplaneTypeName))
       .collect(Collectors.toList());
   }
 
@@ -283,12 +283,12 @@ public final class FlightFilters {
       .filter((Flight i) ->
         i.getFlightId().toString().contains(searchTerm) ||
         i.getFlightRoute().toString().contains(searchTerm) ||
-        i.getFlightRoute().getRouteOriginIataId().getAirportIataId().contains(searchTerm) ||
-        i.getFlightRoute().getRouteDestinationIataId().getAirportIataId().contains(searchTerm) ||
-        i.getFlightRoute().getRouteOriginIataId().getAirportCityName().contains(searchTerm) ||
-        i.getFlightRoute().getRouteDestinationIataId().getAirportCityName().contains(searchTerm) ||
+        i.getFlightRoute().getRouteOrigin().getAirportIataId().contains(searchTerm) ||
+        i.getFlightRoute().getRouteDestination().getAirportIataId().contains(searchTerm) ||
+        i.getFlightRoute().getRouteOrigin().getAirportCityName().contains(searchTerm) ||
+        i.getFlightRoute().getRouteDestination().getAirportCityName().contains(searchTerm) ||
         i.getFlightAirplane().toString().contains(searchTerm) ||
-        i.getFlightAirplane().getAirplaneTypeId().getAirplaneTypeName().contains(searchTerm) ||
+        i.getFlightAirplane().getAirplaneType().getAirplaneTypeName().contains(searchTerm) ||
         i.getFlightDepartureTime().contains(searchTerm) ||
         i.getFlightSeatingId().toString().contains(searchTerm) ||
         i.getFlightDuration().toString().contains(searchTerm) ||

@@ -20,21 +20,21 @@ public class Route {
 	
 	@ManyToOne
 	@JoinColumn(name = "origin_Id")
-	private Airport routeOriginIataId;
+	private Airport routeOrigin;
 
 	@ManyToOne
 	@JoinColumn(name = "destination_Id")
-	private Airport routeDestinationIataId;
+	private Airport routeDestination;
 
 	public Route() {}
-	public Route(Integer routeId, Airport routeOriginIataId, Airport routeDestinationIataId) {
+	public Route(Integer routeId, Airport routeOrigin, Airport routeDestination) {
 		this.routeId = routeId;
-		this.routeOriginIataId = routeOriginIataId;
-		this.routeDestinationIataId = routeDestinationIataId;
+		this.routeOrigin = routeOrigin;
+		this.routeDestination = routeDestination;
 	}
-	public Route(Airport routeOriginIataId, Airport routeDestinationIataId) {
-		this.routeOriginIataId = routeOriginIataId;
-		this.routeDestinationIataId = routeDestinationIataId;
+	public Route(Airport routeOrigin, Airport routeDestination) {
+		this.routeOrigin = routeOrigin;
+		this.routeDestination = routeDestination;
 	}
 	public Route(Integer routeId) {
 		this.routeId = routeId;
@@ -48,20 +48,20 @@ public class Route {
 		this.routeId = routeId;
 	}
 
-	public Airport getRouteOriginIataId() {
-		return routeOriginIataId;
+	public Airport getRouteOrigin() {
+		return routeOrigin;
 	}
 
-	public void setRouteOriginIataId(Airport routeOriginIataId) {
-		this.routeOriginIataId = routeOriginIataId;
+	public void setRouteOrigin(Airport routeOrigin) {
+		this.routeOrigin = routeOrigin;
 	}
 
-	public Airport getRouteDestinationIataId() {
-		return routeDestinationIataId;
+	public Airport getRouteDestination() {
+		return routeDestination;
 	}
 
-	public void setRouteDestinationIataId(Airport routeDestinationIataId) {
-		this.routeDestinationIataId = routeDestinationIataId;
+	public void setRouteDestination(Airport routeDestination) {
+		this.routeDestination = routeDestination;
 	}
 	
 }
