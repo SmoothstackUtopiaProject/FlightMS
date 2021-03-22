@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +19,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
+import com.ss.utopia.exceptions.AirplaneNotFoundException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
+import com.ss.utopia.exceptions.RouteNotFoundException;
 import com.ss.utopia.models.Flight;
-import com.ss.utopia.models.Route;
-import com.ss.utopia.models.Airplane;
 import com.ss.utopia.models.ErrorMessage;
 import com.ss.utopia.services.FlightService;
 
 @RestController
+@RestControllerAdvice
 @RequestMapping("/flights")
 public class FlightController {
 	
@@ -57,7 +58,7 @@ public class FlightController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) throws AirplaneAlreadyInUseException {
+	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException {
 		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
 		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
 		String dateTime = flightMap.get("flightDepartureTime");
@@ -82,10 +83,10 @@ public class FlightController {
 	
 	@PutMapping
 	public ResponseEntity<Object> update(@RequestBody Map<String, String> flightMap) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException {
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
 		Integer id = Integer.parseInt(flightMap.get("flightId"));
-		Route routeId = new Route(Integer.parseInt(flightMap.get("flightRouteId")));
-		Airplane airplaneId = new Airplane(Integer.parseInt(flightMap.get("flightAirplaneId")));
+		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
+		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
 		String dateTime = flightMap.get("flightDepartureTime");
 		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
 		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
@@ -93,7 +94,7 @@ public class FlightController {
 		return new ResponseEntity<>(
 			flightService.update(
 				id, routeId, airplaneId, dateTime, seatingId, duration, status
-			), HttpStatus.CREATED
+			), HttpStatus.OK
 		);
 	}
 	
@@ -118,6 +119,24 @@ public class FlightController {
 	@ExceptionHandler(FlightNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<Object> flightNotFoundException(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
+			HttpStatus.NOT_FOUND
+		);
+	}
+
+	@ExceptionHandler(AirplaneNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<Object> airplaneNotFoundException(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
+			HttpStatus.NOT_FOUND
+		);
+	}
+
+	@ExceptionHandler(RouteNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<Object> routeNotFoundException(Throwable err) {
 		return new ResponseEntity<>(
 			new ErrorMessage(err.getMessage()), 
 			HttpStatus.NOT_FOUND
