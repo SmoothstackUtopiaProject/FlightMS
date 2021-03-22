@@ -58,8 +58,8 @@ public class FlightController {
 	
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) throws AirplaneAlreadyInUseException {
-		Route routeId = new Route(Integer.parseInt(flightMap.get("flightRouteId")));
-		Airplane airplaneId = new Airplane(Integer.parseInt(flightMap.get("flightAirplaneId")));
+		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
+		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
 		String dateTime = flightMap.get("flightDepartureTime");
 		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
 		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
