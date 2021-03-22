@@ -281,18 +281,18 @@ public final class FlightFilters {
     for(String searchTerm : splitTerms) {
       flights = flights.parallelStream()
       .filter((Flight i) ->
-        i.getFlightId().toString().contains(searchTerm) ||
-        i.getFlightRoute().toString().contains(searchTerm) ||
-        i.getFlightRoute().getRouteOrigin().getAirportIataId().contains(searchTerm) ||
-        i.getFlightRoute().getRouteDestination().getAirportIataId().contains(searchTerm) ||
-        i.getFlightRoute().getRouteOrigin().getAirportCityName().contains(searchTerm) ||
-        i.getFlightRoute().getRouteDestination().getAirportCityName().contains(searchTerm) ||
-        i.getFlightAirplane().toString().contains(searchTerm) ||
-        i.getFlightAirplane().getAirplaneType().getAirplaneTypeName().contains(searchTerm) ||
-        i.getFlightDepartureTime().contains(searchTerm) ||
-        i.getFlightSeatingId().toString().contains(searchTerm) ||
-        i.getFlightDuration().toString().contains(searchTerm) ||
-        i.getFlightStatus().contains(searchTerm)
+        i.getFlightId().toString().toLowerCase().contains(searchTerm) ||
+        i.getFlightRoute().toString().toLowerCase().contains(searchTerm) ||
+        i.getFlightRoute().getRouteOrigin().getAirportIataId().toLowerCase().contains(searchTerm) ||
+        i.getFlightRoute().getRouteDestination().getAirportIataId().toLowerCase().contains(searchTerm) ||
+        i.getFlightRoute().getRouteOrigin().getAirportCityName().toLowerCase().contains(searchTerm) ||
+        i.getFlightRoute().getRouteDestination().getAirportCityName().toLowerCase().contains(searchTerm) ||
+        i.getFlightAirplane().toString().toLowerCase().contains(searchTerm) ||
+        i.getFlightAirplane().getAirplaneType().getAirplaneTypeName().toLowerCase().contains(searchTerm) ||
+        i.getFlightDepartureTime().toLowerCase().contains(searchTerm) ||
+        i.getFlightSeatingId().toString().toLowerCase().contains(searchTerm) ||
+        i.getFlightDuration().toString().toLowerCase().contains(searchTerm) ||
+        i.getFlightStatus().toLowerCase().contains(searchTerm)
       ).collect(Collectors.toList());
     }
 		return flights.stream().collect(Collectors.toList());
