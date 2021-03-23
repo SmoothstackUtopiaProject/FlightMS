@@ -59,7 +59,7 @@ public class FlightController {
 	
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException {
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
 		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
 		String dateTime = flightMap.get("flightDepartureTime");
@@ -84,7 +84,8 @@ public class FlightController {
 	
 	@PutMapping
 	public ResponseEntity<Object> update(@RequestBody Map<String, String> flightMap) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException,
+	 AirplaneNotFoundException, IllegalArgumentException {
 		Integer id = Integer.parseInt(flightMap.get("flightId"));
 		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
 		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
@@ -141,6 +142,15 @@ public class FlightController {
 		return new ResponseEntity<>(
 			new ErrorMessage(err.getMessage()), 
 			HttpStatus.NOT_FOUND
+		);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
+			HttpStatus.BAD_REQUEST
 		);
 	}
 

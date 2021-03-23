@@ -31,7 +31,8 @@ public class FlightService {
 
 	// Find All
 	public List<Flight> findAll() {
-		return flightRepository.findAll();		
+		System.out.println("Hello");
+		return flightRepository.findAll();
 	}
 	
 	// Find By ID
@@ -55,7 +56,7 @@ public class FlightService {
 	// Insert
 	public Flight insert(Integer routeId ,Integer airplaneId , String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
-	FlightNotFoundException, AirplaneNotFoundException {
+	FlightNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 
 		Optional<Route> optionalRoute = flightRepository.findRouteById(routeId);
 		if(!optionalRoute.isPresent()) {
@@ -68,6 +69,10 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 			.stream().filter(i -> 
@@ -90,7 +95,7 @@ public class FlightService {
 	// Update
 	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
-	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
+	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 
 		Optional<Flight> optionalFlight = flightRepository.findById(id);
 		if(!optionalFlight.isPresent()) {
@@ -108,6 +113,10 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 				.stream().filter(i -> 
