@@ -24,10 +24,10 @@ import com.ss.utopia.timeformatting.FlightTimeFormatter;
 @Service
 public class FlightService {
 
+	private static final Integer MINIMUM_AIRPLANE_NOFLIGHT_HOURS = 2;
+
 	@Autowired
 	private FlightRepository flightRepository;
-
-	private static final Integer MINIMUM_AIRPLANE_NOFLIGHT_HOURS = 2;
 
 	// Find All
 	public List<Flight> findAll() {
@@ -54,7 +54,8 @@ public class FlightService {
 
 	// Insert
 	public Flight insert(Integer routeId ,Integer airplaneId , String dateTime, 
-	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException {
+	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
+	FlightNotFoundException, AirplaneNotFoundException {
 
 		Optional<Route> optionalRoute = flightRepository.findRouteById(routeId);
 		if(!optionalRoute.isPresent()) {
@@ -87,18 +88,21 @@ public class FlightService {
 	}
 	
 	// Update
-	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, Integer seatingId,
-	Integer duration, String status) throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
+	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, 
+	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
+	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
 
 		Optional<Flight> optionalFlight = flightRepository.findById(id);
 		if(!optionalFlight.isPresent()) {
 			throw new FlightNotFoundException("No flight with the id: " + id + " exists!");
 		}
+
 		Optional<Route> optionalRoute = flightRepository.findRouteById(routeId);
 		if(!optionalRoute.isPresent()) {
 			throw new RouteNotFoundException("No Route with ID: " + routeId + " exist.");
 		}
 		Route route = optionalRoute.get();
+		
 		Optional<Airplane> optionalAirplane = flightRepository.findAirplaneById(airplaneId);
 		if(!optionalAirplane.isPresent()) {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
@@ -119,15 +123,17 @@ public class FlightService {
 				"Airplane with id: " + airplaneId +" already has flights within two hours of what you are trying to create"
 			);
 		}
+		
 		return flightRepository.save(new Flight(id, route, airplane, dateTime, seatingId, duration, status));
 	}	
 
 	// Delete by ID
-	public void deleteById(Integer id) throws FlightNotFoundException {
+	public String deleteById(Integer id) throws FlightNotFoundException {
 		Optional<Flight> optionalFlight = flightRepository.findById(id);
 		if(!optionalFlight.isPresent()) {
 			throw new FlightNotFoundException("No flight with the id: " + id + " exists!");
 		}
 		flightRepository.deleteById(id);
+		return "Flight with ID: " + id + " was deleted.";
 	}
 }

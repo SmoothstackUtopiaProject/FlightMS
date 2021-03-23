@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
 import com.ss.utopia.exceptions.AirplaneNotFoundException;
@@ -51,15 +50,16 @@ public class FlightController {
 			: new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("{path}")
-	public ResponseEntity<Object> findById(@PathVariable String path) throws FlightNotFoundException {
-		Integer flightId = Integer.parseInt(path);
-		Flight flight = flightService.findById(flightId);
+	@GetMapping("{flightId}")
+	public ResponseEntity<Object> findById(@PathVariable String flightId) throws FlightNotFoundException {
+		Integer formattedFlightId = Integer.parseInt(flightId);
+		Flight flight = flightService.findById(formattedFlightId);
 		return new ResponseEntity<>(flight, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException {
+	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) 
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException {
 		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
 		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
 		String dateTime = flightMap.get("flightDepartureTime");
@@ -101,8 +101,8 @@ public class FlightController {
 	
 	@DeleteMapping("{flightId}")
 	public ResponseEntity<Object> deleteById(@PathVariable String flightId) throws FlightNotFoundException {
-		flightService.deleteById(Integer.parseInt(flightId));
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		String deleteInformation = flightService.deleteById(Integer.parseInt(flightId));
+		return new ResponseEntity<>(deleteInformation, HttpStatus.ACCEPTED);
 	}
 	
 	
@@ -159,6 +159,15 @@ public class FlightController {
 	public ResponseEntity<Object> invalidMessage() {
 		return new ResponseEntity<>(
 			new ErrorMessage("Invalid HTTP message content."), 
+			HttpStatus.BAD_REQUEST
+		);
+	}
+
+	@ExceptionHandler(NumberFormatException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> invalidParameters(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
 			HttpStatus.BAD_REQUEST
 		);
 	}
