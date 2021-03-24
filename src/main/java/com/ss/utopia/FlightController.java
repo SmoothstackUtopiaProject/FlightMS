@@ -58,20 +58,18 @@ public class FlightController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) 
+	public ResponseEntity<Object> create(@RequestBody Flight flight) 
 	throws AirplaneAlreadyInUseException, RouteNotFoundException, AirplaneNotFoundException {
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
-		String dateTime = flightMap.get("flightDepartureTime");
-		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
-		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
-		String status = flightMap.get("flightStatus");
-		
-		return new ResponseEntity<>(
-			flightService.insert(
-				routeId, airplaneId, dateTime, seatingId, duration, status
-			), HttpStatus.CREATED
+		Flight newFlight = flightService.insert(
+			flight.getFlightRoute().getRouteId(),
+			flight.getFlightAirplane().getAirplaneId(),
+			flight.getFlightDepartureTime(),
+			flight.getFlightSeatingId(),
+			flight.getFlightDuration(),
+			flight.getFlightStatus()
 		);
+		
+		return new ResponseEntity<>(newFlight, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/search")
@@ -83,20 +81,19 @@ public class FlightController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Object> update(@RequestBody Map<String, String> flightMap) 
+	public ResponseEntity<Object> update(@RequestBody Flight flight) 
 	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
-		Integer id = Integer.parseInt(flightMap.get("flightId"));
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
-		String dateTime = flightMap.get("flightDepartureTime");
-		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
-		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
-		String status = flightMap.get("flightStatus");
-		return new ResponseEntity<>(
-			flightService.update(
-				id, routeId, airplaneId, dateTime, seatingId, duration, status
-			), HttpStatus.OK
+
+		Flight newFlight = flightService.update(
+			flight.getFlightId(),
+			flight.getFlightRoute().getRouteId(),
+			flight.getFlightAirplane().getAirplaneId(),
+			flight.getFlightDepartureTime(),
+			flight.getFlightSeatingId(),
+			flight.getFlightDuration(),
+			flight.getFlightStatus()
 		);
+		return new ResponseEntity<>(newFlight, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{flightId}")
