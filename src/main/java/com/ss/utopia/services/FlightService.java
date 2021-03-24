@@ -55,11 +55,11 @@ public class FlightService {
 	// Insert
 	public Flight insert(Integer routeId ,Integer airplaneId , String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
-	FlightNotFoundException, AirplaneNotFoundException {
+	RouteNotFoundException, AirplaneNotFoundException {
 
 		Optional<Route> optionalRoute = flightRepository.findRouteById(routeId);
 		if(!optionalRoute.isPresent()) {
-			throw new FlightNotFoundException("No Route with ID: " + routeId + " exist.");
+			throw new RouteNotFoundException("No Route with ID: " + routeId + " exist.");
 		}
 		Route route = optionalRoute.get();
 		
