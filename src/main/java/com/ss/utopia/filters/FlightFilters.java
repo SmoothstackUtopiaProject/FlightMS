@@ -281,6 +281,8 @@ public final class FlightFilters {
     for(String searchTerm : splitTerms) {
       flights = flights.parallelStream()
       .filter((Flight i) ->
+        ("airplaneid="+i.getFlightAirplane().getAirplaneId().toString().toLowerCase()).contains(searchTerm) ||
+        ("routeid="+i.getFlightRoute().getRouteId().toString().toLowerCase()).contains(searchTerm) ||
         ("flightid="+i.getFlightId().toString().toLowerCase()).contains(searchTerm) ||
         i.getFlightId().toString().toLowerCase().contains(searchTerm) ||
         i.getFlightRoute().toString().toLowerCase().contains(searchTerm) ||
