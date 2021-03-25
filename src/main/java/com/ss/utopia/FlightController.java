@@ -54,7 +54,8 @@ public class FlightController {
 	}
 
 	@GetMapping("{flightId}")
-	public ResponseEntity<Object> findById(@PathVariable String flightId) throws FlightNotFoundException {
+	public ResponseEntity<Object> findById(@PathVariable String flightId) 
+	throws FlightNotFoundException {
 		Integer formattedFlightId = Integer.parseInt(flightId);
 		Flight flight = flightService.findById(formattedFlightId);
 		return new ResponseEntity<>(flight, HttpStatus.OK);
@@ -62,7 +63,8 @@ public class FlightController {
 	
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestBody @Valid Flight flight) 
-	throws AirplaneAlreadyInUseException, RouteNotFoundException, AirplaneNotFoundException {
+	throws AirplaneAlreadyInUseException, RouteNotFoundException, 
+	AirplaneNotFoundException, IllegalArgumentException {
 		Flight newFlight = flightService.insert(
 			flight.getFlightRoute().getRouteId(),
 			flight.getFlightAirplane().getAirplaneId(),
@@ -85,8 +87,8 @@ public class FlightController {
 	
 	@PutMapping
 	public ResponseEntity<Object> update(@RequestBody @Valid Flight flight) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
-
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, 
+	RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 		Flight newFlight = flightService.update(
 			flight.getFlightId(),
 			flight.getFlightRoute().getRouteId(),
@@ -100,7 +102,8 @@ public class FlightController {
 	}
 	
 	@DeleteMapping("{flightId}")
-	public ResponseEntity<Object> deleteById(@PathVariable String flightId) throws FlightNotFoundException {
+	public ResponseEntity<Object> deleteById(@PathVariable String flightId) 
+	throws FlightNotFoundException {
 		String deleteInformation = flightService.deleteById(Integer.parseInt(flightId));
 		return new ResponseEntity<>(deleteInformation, HttpStatus.ACCEPTED);
 	}

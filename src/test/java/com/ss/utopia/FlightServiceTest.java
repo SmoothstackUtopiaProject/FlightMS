@@ -134,6 +134,11 @@ class FlightServiceTest {
   }
 
   @Test
+  void test_insert_invalidRouteIdInput() {
+    assertThrows(IllegalArgumentException.class, () -> service.insert(-1, mockAirplaneId, mockDeparture, mockSeatingId, mockDuration, mockStatus));
+  }
+
+  @Test
   void test_insert_throwsRouteNotFoundException() throws Exception {
     when(repository.findRouteById(mockRouteId)).thenReturn(Optional.empty());
 
