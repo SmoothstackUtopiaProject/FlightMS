@@ -54,7 +54,7 @@ public class FlightController {
 	}
 
 	@GetMapping("{flightId}")
-	public ResponseEntity<Object> findById(@PathVariable String flightId) 
+	public ResponseEntity<Flight> findById(@PathVariable String flightId) 
 	throws FlightNotFoundException {
 		Integer formattedFlightId = Integer.parseInt(flightId);
 		Flight flight = flightService.findById(formattedFlightId);
@@ -62,7 +62,7 @@ public class FlightController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody @Valid Flight flight) 
+	public ResponseEntity<Flight> create(@RequestBody @Valid Flight flight) 
 	throws AirplaneAlreadyInUseException, RouteNotFoundException, 
 	AirplaneNotFoundException, IllegalArgumentException {
 		Flight newFlight = flightService.insert(
@@ -86,7 +86,7 @@ public class FlightController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Object> update(@RequestBody @Valid Flight flight) 
+	public ResponseEntity<Flight> update(@RequestBody @Valid Flight flight) 
 	throws AirplaneAlreadyInUseException, FlightNotFoundException, 
 	RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 		Flight newFlight = flightService.update(
