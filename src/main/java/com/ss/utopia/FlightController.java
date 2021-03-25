@@ -3,6 +3,9 @@ package com.ss.utopia;
 import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.Map;
+
+import javax.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,7 @@ public class FlightController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody Flight flight) 
+	public ResponseEntity<Object> create(@RequestBody @Valid Flight flight) 
 	throws AirplaneAlreadyInUseException, RouteNotFoundException, AirplaneNotFoundException {
 		Flight newFlight = flightService.insert(
 			flight.getFlightRoute().getRouteId(),
@@ -81,7 +84,7 @@ public class FlightController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Object> update(@RequestBody Flight flight) 
+	public ResponseEntity<Object> update(@RequestBody @Valid Flight flight) 
 	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
 
 		Flight newFlight = flightService.update(
