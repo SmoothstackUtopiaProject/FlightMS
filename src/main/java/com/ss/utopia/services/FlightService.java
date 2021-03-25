@@ -19,7 +19,6 @@ import com.ss.utopia.models.Airplane;
 import com.ss.utopia.models.Flight;
 import com.ss.utopia.models.Route;
 import com.ss.utopia.repositories.FlightRepository;
-import com.ss.utopia.timeformatting.FlightTimeFormatter;
 
 @Service
 public class FlightService {
@@ -55,7 +54,7 @@ public class FlightService {
 	// Insert
 	public Flight insert(Integer routeId ,Integer airplaneId , String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
-	RouteNotFoundException, AirplaneNotFoundException {
+	RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 
 		Optional<Route> optionalRoute = flightRepository.findRouteById(routeId);
 		if(!optionalRoute.isPresent()) {
@@ -68,12 +67,16 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(LocalDateTime.parse(dateTime).isBefore(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 			.stream().filter(i -> 
 			Math.abs(Duration.between(
-					LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()), 
-					LocalDateTime.parse(i.getFlightDepartureTime(), FlightTimeFormatter.getInstance())
+					LocalDateTime.parse(dateTime), 
+					LocalDateTime.parse(i.getFlightDepartureTime())
 				).toHours()) < MINIMUM_AIRPLANE_NOFLIGHT_HOURS
 			)
 			.collect(Collectors.toList());
@@ -90,7 +93,7 @@ public class FlightService {
 	// Update
 	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
-	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException {
+	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
 
 		Optional<Flight> optionalFlight = flightRepository.findById(id);
 		if(!optionalFlight.isPresent()) {
@@ -108,12 +111,16 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(LocalDateTime.parse(dateTime).isBefore(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 				.stream().filter(i -> 
 				(Math.abs(Duration.between(
-						LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()), 
-						LocalDateTime.parse(i.getFlightDepartureTime(), FlightTimeFormatter.getInstance())
+						LocalDateTime.parse(dateTime), 
+						LocalDateTime.parse(i.getFlightDepartureTime())
 					).toHours()) < MINIMUM_AIRPLANE_NOFLIGHT_HOURS
 				) && !i.getFlightId().equals(id))
 				.collect(Collectors.toList());

@@ -2,12 +2,12 @@ package com.ss.utopia;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.ss.utopia.repositories.FlightRepository;
 import com.ss.utopia.services.FlightService;
 import com.ss.utopia.exceptions.AirplaneNotFoundException;
-import com.ss.utopia.exceptions.FlightAlreadyExistsException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
 import com.ss.utopia.exceptions.RouteNotFoundException;
 import com.ss.utopia.filters.FlightFilters;
@@ -43,9 +43,9 @@ class FlightServiceTest {
     new Route(
       1, 
       new Airport(
-        "DCA", 
-        "Ronald Reagan Inetnational Airport", 
-        "Washington D.C."
+        "ATL", 
+        "Hartsfield-Jackson Atlanta International Airport", 
+        "Atlanta."
       ), 
       new Airport(
         "DCA", 
@@ -68,7 +68,7 @@ class FlightServiceTest {
         "7-22-45"
       )
     ),
-    "2020-4-10 07:43:00",
+    "2021-04-10T11:43:00",
     1,
     43000,
     "ACTIVE"
@@ -81,7 +81,7 @@ class FlightServiceTest {
   final Integer mockSeatingId = mockFlight.getFlightSeatingId();
   final Integer mockDuration = mockFlight.getFlightDuration();
   final String mockStatus = mockFlight.getFlightStatus();
-  final String storedDeparture = "2020-4-11 07:43:00";
+  final String storedDeparture = "2021-05-11T10:43:00";
 
   @BeforeEach
   void beforeEach() {
@@ -114,10 +114,23 @@ class FlightServiceTest {
 
   @Test
   void test_insert_returnsCreatedFlight() throws Exception{
-    when(repository.save(mockFlight)).thenReturn(mockFlight);
-    Flight returnedFlight = service.insert(mockRouteId, mockAirplaneId, storedDeparture, mockSeatingId, mockDuration, mockStatus);
+    Flight newFlight = new Flight(new Route(mockRouteId), new Airplane(mockAirplaneId), storedDeparture, mockSeatingId, mockDuration, mockStatus);
+    when(repository.save(any(Flight.class))).thenReturn(newFlight);
+    Flight returnedFlight = service.insert(
+      newFlight.getFlightRoute().getRouteId(), 
+      newFlight.getFlightAirplane().getAirplaneId(), 
+      newFlight.getFlightDepartureTime(), 
+      newFlight.getFlightSeatingId(), 
+      newFlight.getFlightDuration(), 
+      newFlight.getFlightStatus()
+      );
 
     assertEquals(mockRouteId, returnedFlight.getFlightRoute().getRouteId());
+    assertEquals(mockAirplaneId, returnedFlight.getFlightAirplane().getAirplaneId());
+    assertEquals(storedDeparture, returnedFlight.getFlightDepartureTime());
+    assertEquals(mockSeatingId, returnedFlight.getFlightSeatingId());
+    assertEquals(mockDuration, returnedFlight.getFlightDuration());
+    assertEquals(mockStatus, returnedFlight.getFlightStatus());
   }
 
   @Test
@@ -132,6 +145,29 @@ class FlightServiceTest {
     when(repository.findAirplaneById(mockAirplaneId)).thenReturn(Optional.empty());
 
     assertThrows(AirplaneNotFoundException.class, () -> service.insert(mockRouteId, mockAirplaneId, mockDeparture, mockSeatingId, mockDuration, mockStatus));
+  }
+
+  @Test
+  void test_update_returnsUpdatedFlight() throws Exception {
+    Flight updatedFlight = new Flight(1,new Route(mockRouteId), new Airplane(mockAirplaneId), storedDeparture, mockSeatingId, mockDuration, mockStatus);
+    when(repository.save(any(Flight.class))).thenReturn(updatedFlight);
+    Flight returnedFlight = service.update(
+      updatedFlight.getFlightId(),
+      updatedFlight.getFlightRoute().getRouteId(), 
+      updatedFlight.getFlightAirplane().getAirplaneId(), 
+      updatedFlight.getFlightDepartureTime(), 
+      updatedFlight.getFlightSeatingId(), 
+      updatedFlight.getFlightDuration(), 
+      updatedFlight.getFlightStatus()
+      );
+
+    assertEquals(mockFlightId, returnedFlight.getFlightId());
+    assertEquals(mockRouteId, returnedFlight.getFlightRoute().getRouteId());
+    assertEquals(mockAirplaneId, returnedFlight.getFlightAirplane().getAirplaneId());
+    assertEquals(storedDeparture, returnedFlight.getFlightDepartureTime());
+    assertEquals(mockSeatingId, returnedFlight.getFlightSeatingId());
+    assertEquals(mockDuration, returnedFlight.getFlightDuration());
+    assertEquals(mockStatus, returnedFlight.getFlightStatus());
   }
 
   @Test

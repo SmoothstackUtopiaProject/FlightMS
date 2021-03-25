@@ -251,23 +251,15 @@ class FlightControllerTest {
   //=======================================================================
   @Test
   void test_insert_withValidFlight_thenStatus201() throws Exception {
-    
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightRouteId", mockRouteId.toString());
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
-
     when(service.insert(
         mockRouteId, mockAirplaneId, 
         mockDeparture, mockSeatingId, 
         mockDuration, mockStatus)).thenReturn(mockFlight);
+
     MvcResult response = mvc
       .perform(post(SERVICE_PATH_FLIGHTS)
       .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
+      .content(mapper.writeValueAsString(mockFlight))
       )
       .andExpect(status().is(201))
       .andReturn();
@@ -277,51 +269,23 @@ class FlightControllerTest {
 
   @Test
   void test_insert_withNonExistingRoute_thenStatus404() throws Exception {
-
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightRouteId", mockRouteId.toString());
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
+    Flight invalidFlight = mockFlight;
+    invalidFlight.setFlightRoute(new Route(-1));
 
     when(service.insert(
-        mockRouteId, mockAirplaneId, 
-        mockDeparture, mockSeatingId, 
-        mockDuration, mockStatus)).thenThrow(new RouteNotFoundException());
+        -1, 
+        invalidFlight.getFlightAirplane().getAirplaneId(), 
+        invalidFlight.getFlightDepartureTime(), 
+        invalidFlight.getFlightSeatingId(), 
+        invalidFlight.getFlightDuration(), 
+        invalidFlight.getFlightStatus())).thenThrow(new RouteNotFoundException());
 
     mvc
       .perform(post(SERVICE_PATH_FLIGHTS)
       .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
+      .content(mapper.writeValueAsString(invalidFlight))
       )
       .andExpect(status().is(404))
-      .andReturn();
-  }
-
-  @Test
-  void test_insert_withInvalidParams_thenStatus400() throws Exception {
-    
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightRouteId", "InvalidRoute");
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
-
-    when(service.insert(
-        mockRouteId, mockAirplaneId, 
-        mockDeparture, mockSeatingId, 
-        mockDuration, mockStatus)).thenThrow(new IllegalArgumentException());
-
-    mvc
-      .perform(post(SERVICE_PATH_FLIGHTS)
-      .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
-      )
-      .andExpect(status().is(400))
       .andReturn();
   }
 
@@ -329,15 +293,6 @@ class FlightControllerTest {
   //=======================================================================
   @Test
   void test_update_withValidFlight_thenStatus202() throws Exception {
-
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightId", mockFlightId.toString());
-    filterMap.put("flightRouteId", mockRouteId.toString());
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
 
     when(service.update(mockFlightId,
         mockRouteId, mockAirplaneId, 
@@ -347,7 +302,7 @@ class FlightControllerTest {
     MvcResult response = mvc
       .perform(put(SERVICE_PATH_FLIGHTS)
       .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
+      .content(mapper.writeValueAsString(mockFlight))
       )
       .andExpect(status().is(200))
       .andReturn();
@@ -357,17 +312,10 @@ class FlightControllerTest {
 
   @Test
   void test_update_withNonExistingFlight_thenStatus404() throws Exception {
-    
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightId", "-2");
-    filterMap.put("flightRouteId", mockRouteId.toString());
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
+    Flight invalidFlight = mockFlight;
+    invalidFlight.setFlightId(-1);
 
-    when(service.update(-2,
+    when(service.update(invalidFlight.getFlightId(),
         mockRouteId, mockAirplaneId, 
         mockDeparture, mockSeatingId, 
         mockDuration, mockStatus)).thenThrow(new FlightNotFoundException());
@@ -375,7 +323,7 @@ class FlightControllerTest {
     mvc
       .perform(put(SERVICE_PATH_FLIGHTS)
       .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
+      .content(mapper.writeValueAsString(invalidFlight))
       )
       .andExpect(status().is(404))
       .andReturn();
@@ -383,48 +331,20 @@ class FlightControllerTest {
 
   @Test
   void test_update_withNonExistingRoute_thenStatus404() throws Exception {
-    
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightId", mockFlightId.toString());
-    filterMap.put("flightRouteId", "55");
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
+    Flight invalidFlight = mockFlight;
+    invalidFlight.setFlightRoute(new Route(-1));
 
     when(service.update(mockFlightId,
-        55, mockAirplaneId, 
+        invalidFlight.getFlightRoute().getRouteId(), mockAirplaneId, 
         mockDeparture, mockSeatingId, 
-        mockDuration, mockStatus)).thenThrow(new FlightNotFoundException());
+        mockDuration, mockStatus)).thenThrow(new RouteNotFoundException());
 
     mvc
       .perform(put(SERVICE_PATH_FLIGHTS)
       .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
+      .content(mapper.writeValueAsString(invalidFlight))
       )
       .andExpect(status().is(404))
-      .andReturn();
-  }
-
-  @Test
-  void test_update_withInvalidParams_thenStatus400() throws Exception {
-    
-    Map<String, String> filterMap = new HashMap<>();
-    filterMap.put("flightId", "xx");
-    filterMap.put("flightRouteId", mockRouteId.toString());
-    filterMap.put("flightAirplaneId", mockAirplaneId.toString());
-    filterMap.put("flightDepartureTime", mockDeparture.toString());
-    filterMap.put("flightSeatingId", mockSeatingId.toString());
-    filterMap.put("flightDuration", mockDuration.toString());
-    filterMap.put("flightStatus", mockStatus);
-
-    mvc
-      .perform(put(SERVICE_PATH_FLIGHTS)
-      .headers(headers)
-      .content(mapper.writeValueAsString(filterMap))
-      )
-      .andExpect(status().is(400))
       .andReturn();
   }
 

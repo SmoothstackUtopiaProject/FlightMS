@@ -169,6 +169,15 @@ public class FlightController {
 		);
 	}
 
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
+			HttpStatus.BAD_REQUEST
+		);
+	}
+
 	@ExceptionHandler(SQLException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
 	public ResponseEntity<Object> invalidSQL() {
