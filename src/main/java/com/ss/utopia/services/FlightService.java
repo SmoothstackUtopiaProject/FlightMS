@@ -14,7 +14,6 @@ import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
 import com.ss.utopia.exceptions.AirplaneNotFoundException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
 import com.ss.utopia.exceptions.RouteNotFoundException;
-import com.ss.utopia.timeformatting.FlightTimeFormatter;
 import com.ss.utopia.filters.FlightFilters;
 import com.ss.utopia.models.Airplane;
 import com.ss.utopia.models.Flight;
@@ -32,8 +31,7 @@ public class FlightService {
 
 	// Find All
 	public List<Flight> findAll() {
-		System.out.println("Hello");
-		return flightRepository.findAll();
+		return flightRepository.findAll();		
 	}
 	
 	// Find By ID
@@ -73,10 +71,6 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
-
-		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
-			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
-		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 			.stream().filter(i -> 
@@ -100,6 +94,7 @@ public class FlightService {
 	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
 	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
+
 		//input validation
 		validateInput(routeId, airplaneId, dateTime, seatingId, duration);
 		if(!isValidIdInput(id)) {
@@ -122,10 +117,6 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
-
-		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
-			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
-		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 				.stream().filter(i -> 
