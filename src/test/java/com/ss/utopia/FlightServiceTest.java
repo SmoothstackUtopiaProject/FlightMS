@@ -1,9 +1,9 @@
-package com.ss.utopia;
+// package com.ss.utopia;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.mockito.ArgumentMatchers.any;
+// import static org.mockito.Mockito.when;
 
 import com.ss.utopia.repositories.FlightRepository;
 import com.ss.utopia.services.FlightService;
@@ -29,8 +29,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class FlightServiceTest {
+// @SpringBootTest
+// class FlightServiceTest {
 
   @Mock
   private FlightRepository repository;
@@ -95,8 +95,8 @@ class FlightServiceTest {
   void test_getAllFlights_returnsListOfFlights() {
     when(repository.findAll()).thenReturn(List.of(new Flight()));
     
-    assertEquals(1, service.findAll().size());
-  }
+//     assertEquals(1, service.findAll().size());
+//   }
 
   @Test
   void test_findById_returnsAFlight() throws Exception{

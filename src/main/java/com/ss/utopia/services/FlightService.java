@@ -31,7 +31,8 @@ public class FlightService {
 
 	// Find All
 	public List<Flight> findAll() {
-		return flightRepository.findAll();		
+		System.out.println("Hello");
+		return flightRepository.findAll();
 	}
 	
 	// Find By ID
@@ -71,6 +72,10 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 			.stream().filter(i -> 
@@ -94,7 +99,6 @@ public class FlightService {
 	public Flight update(Integer id, Integer routeId, Integer airplaneId, String dateTime, 
 	Integer seatingId, Integer duration, String status) throws AirplaneAlreadyInUseException, 
 	FlightNotFoundException, RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
-
 		//input validation
 		validateInput(routeId, airplaneId, dateTime, seatingId, duration);
 		if(!isValidIdInput(id)) {
@@ -117,6 +121,10 @@ public class FlightService {
 			throw new AirplaneNotFoundException("No Airplane with ID: " + airplaneId + " exist.");
 		}
 		Airplane airplane = optionalAirplane.get();
+
+		if(!LocalDateTime.parse(dateTime, FlightTimeFormatter.getInstance()).isAfter(LocalDateTime.now())){
+			throw new IllegalArgumentException("Departure time: " + dateTime +" cannot be in the past.");
+		}
 		
 		List<Flight> flightsWithAirplaneId = flightRepository.findFlightsByAirplaneId(airplaneId)
 				.stream().filter(i -> 
