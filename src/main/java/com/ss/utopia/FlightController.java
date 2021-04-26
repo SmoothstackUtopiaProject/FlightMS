@@ -3,6 +3,9 @@ package com.ss.utopia;
 import java.net.ConnectException;
 import java.sql.SQLException;
 import java.util.Map;
+
+import javax.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,27 +54,27 @@ public class FlightController {
 	}
 
 	@GetMapping("{flightId}")
-	public ResponseEntity<Object> findById(@PathVariable String flightId) throws FlightNotFoundException {
+	public ResponseEntity<Flight> findById(@PathVariable String flightId) 
+	throws FlightNotFoundException {
 		Integer formattedFlightId = Integer.parseInt(flightId);
 		Flight flight = flightService.findById(formattedFlightId);
 		return new ResponseEntity<>(flight, HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> create(@RequestBody Map<String, String> flightMap) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
-		String dateTime = flightMap.get("flightDepartureTime");
-		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
-		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
-		String status = flightMap.get("flightStatus");
-		
-		return new ResponseEntity<>(
-			flightService.insert(
-				routeId, airplaneId, dateTime, seatingId, duration, status
-			), HttpStatus.CREATED
+	public ResponseEntity<Flight> create(@RequestBody @Valid Flight flight) 
+	throws AirplaneAlreadyInUseException, RouteNotFoundException, 
+	AirplaneNotFoundException, IllegalArgumentException {
+		Flight newFlight = flightService.insert(
+			flight.getFlightRoute().getRouteId(),
+			flight.getFlightAirplane().getAirplaneId(),
+			flight.getFlightDepartureTime(),
+			flight.getFlightSeatingId(),
+			flight.getFlightDuration(),
+			flight.getFlightStatus()
 		);
+		
+		return new ResponseEntity<>(newFlight, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/search")
@@ -83,25 +86,24 @@ public class FlightController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<Object> update(@RequestBody Map<String, String> flightMap) 
-	throws AirplaneAlreadyInUseException, FlightNotFoundException, RouteNotFoundException,
-	 AirplaneNotFoundException, IllegalArgumentException {
-		Integer id = Integer.parseInt(flightMap.get("flightId"));
-		Integer routeId = Integer.parseInt(flightMap.get("flightRouteId"));
-		Integer airplaneId = Integer.parseInt(flightMap.get("flightAirplaneId"));
-		String dateTime = flightMap.get("flightDepartureTime");
-		Integer seatingId = Integer.parseInt(flightMap.get("flightSeatingId"));
-		Integer duration = Integer.parseInt(flightMap.get("flightDuration"));
-		String status = flightMap.get("flightStatus");
-		return new ResponseEntity<>(
-			flightService.update(
-				id, routeId, airplaneId, dateTime, seatingId, duration, status
-			), HttpStatus.OK
+	public ResponseEntity<Flight> update(@RequestBody @Valid Flight flight) 
+	throws AirplaneAlreadyInUseException, FlightNotFoundException, 
+	RouteNotFoundException, AirplaneNotFoundException, IllegalArgumentException {
+		Flight newFlight = flightService.update(
+			flight.getFlightId(),
+			flight.getFlightRoute().getRouteId(),
+			flight.getFlightAirplane().getAirplaneId(),
+			flight.getFlightDepartureTime(),
+			flight.getFlightSeatingId(),
+			flight.getFlightDuration(),
+			flight.getFlightStatus()
 		);
+		return new ResponseEntity<>(newFlight, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{flightId}")
-	public ResponseEntity<Object> deleteById(@PathVariable String flightId) throws FlightNotFoundException {
+	public ResponseEntity<Object> deleteById(@PathVariable String flightId) 
+	throws FlightNotFoundException {
 		String deleteInformation = flightService.deleteById(Integer.parseInt(flightId));
 		return new ResponseEntity<>(deleteInformation, HttpStatus.ACCEPTED);
 	}
@@ -176,6 +178,15 @@ public class FlightController {
 	@ExceptionHandler(NumberFormatException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> invalidParameters(Throwable err) {
+		return new ResponseEntity<>(
+			new ErrorMessage(err.getMessage()), 
+			HttpStatus.BAD_REQUEST
+		);
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
 		return new ResponseEntity<>(
 			new ErrorMessage(err.getMessage()), 
 			HttpStatus.BAD_REQUEST
