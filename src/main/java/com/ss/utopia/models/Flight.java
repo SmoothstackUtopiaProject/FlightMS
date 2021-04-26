@@ -65,23 +65,20 @@ public class Flight {
 		this.flightStatus = flightStatus;
 	}
 
-	public Flight(Route flightRoute, Airplane flightAirplane, String flightDepartureTime, 
-	Integer flightSeatingId, Integer flightDuration,String flightStatus) {
+	public Flight(
+		@NotNull(message = "Route ID should not be empty") Route flightRoute,
+		@NotNull(message = "Airplane ID should not be empty") Airplane flightAirplane,
+		@NotNull(message = "Departure time should not be empty") String flightDepartureTime,
+		@NotNull(message = "Seating ID should not be empty") Integer flightSeatingId,
+		@NotNull(message = "Duration should not be empty") Integer flightDuration,
+		@NotNull(message = "Status should not be empty") String flightStatus) {
+		
 		this.flightRoute = flightRoute;
 		this.flightAirplane = flightAirplane;
 		this.flightDepartureTime = flightDepartureTime;
 		this.flightSeatingId = flightSeatingId;
 		this.flightDuration = flightDuration;
 		this.flightStatus = flightStatus;
-	}
-
-	public Flight(
-		@NotNull(message = "Route ID should not be empty") Route flightRoute,
-		@NotNull(message = "Airplane ID should not be empty") Airplane flightAirplane,
-		@NotNull(message = "Departure time should not be empty") String flightDepartureTime) {
-		this.flightRoute = flightRoute;
-		this.flightAirplane = flightAirplane;
-		this.flightDepartureTime = flightDepartureTime;
 	}
 
 	public String getFlightDepartureTime() {
