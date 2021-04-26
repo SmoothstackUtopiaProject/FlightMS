@@ -186,7 +186,7 @@ public class FlightController {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
+	public ResponseEntity<Object> IllegalArgumentException(Throwable err) {
 		return new ResponseEntity<>(
 			new ErrorMessage(err.getMessage()), 
 			HttpStatus.BAD_REQUEST

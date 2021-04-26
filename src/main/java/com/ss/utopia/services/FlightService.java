@@ -14,6 +14,7 @@ import com.ss.utopia.exceptions.AirplaneAlreadyInUseException;
 import com.ss.utopia.exceptions.AirplaneNotFoundException;
 import com.ss.utopia.exceptions.FlightNotFoundException;
 import com.ss.utopia.exceptions.RouteNotFoundException;
+import com.ss.utopia.timeformatting.FlightTimeFormatter;
 import com.ss.utopia.filters.FlightFilters;
 import com.ss.utopia.models.Airplane;
 import com.ss.utopia.models.Flight;
