@@ -147,15 +147,6 @@ public class FlightController {
 		);
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
-		return new ResponseEntity<>(
-			new ErrorMessage(err.getMessage()), 
-			HttpStatus.BAD_REQUEST
-		);
-	}
-
 	@ExceptionHandler(ConnectException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
 	public ResponseEntity<Object> invalidConnection() {
@@ -186,7 +177,7 @@ public class FlightController {
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<Object> IllegalArgumentException(Throwable err) {
+	public ResponseEntity<Object> illegalArgumentException(Throwable err) {
 		return new ResponseEntity<>(
 			new ErrorMessage(err.getMessage()), 
 			HttpStatus.BAD_REQUEST
